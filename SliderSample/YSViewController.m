@@ -12,27 +12,75 @@
 
 @property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, strong) UISlider *slider;
+@property (nonatomic) BOOL nowSliding;
 
 @end
 
 @implementation YSViewController
 
+
+//.｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ//
+#pragma mark -- View Life Cycle --
+//.｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ//
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
     
     [self setTextViewOnView];
     [self setSliderOnView];
 }
 
+
+//.｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ//
+#pragma mark -- UITextView --
+//.｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ//
+
 - (void)setTextViewOnView {
     
     self.textView = [[UITextView alloc] init];
-    _textView.frame = self.view.frame;
+    _textView.delegate = self;
+    _textView.showsVerticalScrollIndicator = NO;
     _textView.font = [UIFont systemFontOfSize:24];
     _textView.text = @"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc";
+    
+    CGRect frame = self.view.frame;
+    frame.size.width -= 20;
+    _textView.frame = frame;
+    
     [self.view addSubview:_textView];
 }
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    
+    //textViewがスクロールされたらつまみを表示する
+    [self showSlider];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    //UISliderのつまみにタッチした時に呼ばれる
+    [_slider addTarget:self action:@selector(slideStarted:) forControlEvents:UIControlEventTouchDown];
+    
+    //textViewのスクロールに合わせてつまみを動かす
+    _slider.value = scrollView.contentOffset.y/(_textView.contentSize.height - _textView.bounds.size.height);
+    
+    //UISliderから指が離れた時に呼ばれる
+    [_slider addTarget:self action:@selector(slideEnded:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    //スクロールが終わったらスライダーのつまみを消す
+    [self performSelector:@selector(hideSlider) withObject:nil afterDelay:2];
+}
+
+
+//.｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ//
+#pragma mark -- UISlider --
+//.｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ♡★♡ﾟ･*:.｡ ｡.:*･ﾟ//
 
 - (void)setSliderOnView {
     
@@ -51,7 +99,11 @@
     //UISliderのつまみにカスタム画像を設定
     [_slider setThumbImage:[UIImage imageNamed:@"thumb.png"] forState:UIControlStateNormal];
     
+    //UISliderが動くたびに sliderValueChanged: が呼ばれる
     [_slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    //最初は消しておく
+    _slider.hidden = YES;
     
     [self.view addSubview:_slider];    
 }
@@ -63,10 +115,37 @@
     [_textView setContentOffset:CGPointMake(0, position)];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)slideStarted:(UISlider*)slider {
     
-    //textViewのスクロールに合わせてつまみを動かす
-    _slider.value = scrollView.contentOffset.y/_textView.contentSize.height;
+    _nowSliding = YES;
+    
+    //スライド中につまみが消えないように、hideSliderはキャンセルしておく
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideSlider) object:nil];
+}
+
+- (void)slideEnded:(UISlider*)slider {
+    
+    _nowSliding = NO;
+    
+    //スクロールが終わったらスライダーのつまみを消す
+    [self performSelector:@selector(hideSlider) withObject:nil afterDelay:2];
+}
+
+- (void)showSlider {
+    
+    _slider.hidden = NO;
+    
+    //スライド中につまみが消えないように、hideSliderはキャンセルしておく
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideSlider) object:nil];
+}
+
+- (void)hideSlider {
+    
+    if (_nowSliding) {
+        return;
+    }
+    
+    _slider.hidden = YES;
 }
 
 @end
