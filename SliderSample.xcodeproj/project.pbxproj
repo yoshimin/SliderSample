@@ -24,6 +24,8 @@
 		466B48DD171FDF3800D81D11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 466B48B5171FDF3800D81D11 /* Foundation.framework */; };
 		466B48E5171FDF3800D81D11 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 466B48E3171FDF3800D81D11 /* InfoPlist.strings */; };
 		466B48E8171FDF3800D81D11 /* SliderSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 466B48E7171FDF3800D81D11 /* SliderSampleTests.m */; };
+		466B48F3171FE3C600D81D11 /* skeleton.png in Resources */ = {isa = PBXBuildFile; fileRef = 466B48F1171FE3C600D81D11 /* skeleton.png */; };
+		466B48F4171FE3C600D81D11 /* thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 466B48F2171FE3C600D81D11 /* thumb.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,8 @@
 		466B48E4171FDF3800D81D11 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		466B48E6171FDF3800D81D11 /* SliderSampleTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SliderSampleTests.h; sourceTree = "<group>"; };
 		466B48E7171FDF3800D81D11 /* SliderSampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SliderSampleTests.m; sourceTree = "<group>"; };
+		466B48F1171FE3C600D81D11 /* skeleton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skeleton.png; sourceTree = "<group>"; };
+		466B48F2171FE3C600D81D11 /* thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thumb.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,12 +123,12 @@
 		466B48B9171FDF3800D81D11 /* SliderSample */ = {
 			isa = PBXGroup;
 			children = (
+				466B48F1171FE3C600D81D11 /* skeleton.png */,
+				466B48F2171FE3C600D81D11 /* thumb.png */,
 				466B48C2171FDF3800D81D11 /* YSAppDelegate.h */,
 				466B48C3171FDF3800D81D11 /* YSAppDelegate.m */,
 				466B48CB171FDF3800D81D11 /* YSViewController.h */,
 				466B48CC171FDF3800D81D11 /* YSViewController.m */,
-				466B48CE171FDF3800D81D11 /* YSViewController_iPhone.xib */,
-				466B48D1171FDF3800D81D11 /* YSViewController_iPad.xib */,
 				466B48BA171FDF3800D81D11 /* Supporting Files */,
 			);
 			path = SliderSample;
@@ -133,6 +137,8 @@
 		466B48BA171FDF3800D81D11 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				466B48CE171FDF3800D81D11 /* YSViewController_iPhone.xib */,
+				466B48D1171FDF3800D81D11 /* YSViewController_iPad.xib */,
 				466B48BB171FDF3800D81D11 /* SliderSample-Info.plist */,
 				466B48BC171FDF3800D81D11 /* InfoPlist.strings */,
 				466B48BF171FDF3800D81D11 /* main.m */,
@@ -241,6 +247,8 @@
 				466B48CA171FDF3800D81D11 /* Default-568h@2x.png in Resources */,
 				466B48D0171FDF3800D81D11 /* YSViewController_iPhone.xib in Resources */,
 				466B48D3171FDF3800D81D11 /* YSViewController_iPad.xib in Resources */,
+				466B48F3171FE3C600D81D11 /* skeleton.png in Resources */,
+				466B48F4171FE3C600D81D11 /* thumb.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
