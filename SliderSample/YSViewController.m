@@ -12,7 +12,6 @@
 
 @property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, strong) UISlider *slider;
-@property (nonatomic) BOOL nowSliding;
 
 @end
 
@@ -53,28 +52,13 @@
     [self.view addSubview:_textView];
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     //textViewがスクロールされたらつまみを表示する
     [self showSlider];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    //UISliderのつまみにタッチした時に呼ばれる
-    [_slider addTarget:self action:@selector(slideStarted:) forControlEvents:UIControlEventTouchDown];
     
     //textViewのスクロールに合わせてつまみを動かす
     _slider.value = scrollView.contentOffset.y/(_textView.contentSize.height - _textView.bounds.size.height);
-    
-    //UISliderから指が離れた時に呼ばれる
-    [_slider addTarget:self action:@selector(slideEnded:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    
-    //スクロールが終わったらスライダーのつまみを消す
-    [self performSelector:@selector(hideSlider) withObject:nil afterDelay:2];
 }
 
 
@@ -102,9 +86,6 @@
     //UISliderが動くたびに sliderValueChanged: が呼ばれる
     [_slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     
-    //最初は消しておく
-    _slider.hidden = YES;
-    
     [self.view addSubview:_slider];    
 }
 
@@ -115,37 +96,21 @@
     [_textView setContentOffset:CGPointMake(0, position)];
 }
 
-- (void)slideStarted:(UISlider*)slider {
-    
-    _nowSliding = YES;
-    
-    //スライド中につまみが消えないように、hideSliderはキャンセルしておく
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideSlider) object:nil];
-}
-
-- (void)slideEnded:(UISlider*)slider {
-    
-    _nowSliding = NO;
-    
-    //スクロールが終わったらスライダーのつまみを消す
-    [self performSelector:@selector(hideSlider) withObject:nil afterDelay:2];
-}
-
 - (void)showSlider {
     
-    _slider.hidden = NO;
+    _slider.alpha = 1.0;
     
-    //スライド中につまみが消えないように、hideSliderはキャンセルしておく
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideSlider) object:nil];
+    [self performSelector:@selector(hideSlider) withObject:nil afterDelay:2];
 }
 
 - (void)hideSlider {
     
-    if (_nowSliding) {
-        return;
-    }
-    
-    _slider.hidden = YES;
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         _slider.alpha = 0.0;
+                     }
+                     completion:nil];
 }
 
 @end
